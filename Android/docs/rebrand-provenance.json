@@ -1,0 +1,19 @@
+{
+  "name": "ZYROX DOWNLOADER",
+  "version": "1.0.0",
+  "applicationId": "com.zyrox.downloader",
+  "base_repository": "https://github.com/Saurabh-gzp/VidGrab",
+  "base_commit": "ffbb72a7044b37a3008bf61de8261411cacee951",
+  "base_version": "3.1.0",
+  "changes": [
+    "Branding, package name, launcher icons, adaptive/monochrome logo",
+    "Ink/mint dark and ivory/evergreen light themes",
+    "Redesigned Home, Library/history, Music, Settings and navigation",
+    "Java native splash animation and local media player",
+    "ZYROX storage folder names, notification and preference identifiers"
+  ],
+  "language": "Kotlin/Jetpack Compose, Java splash and media player",
+  "runtime": "Existing on-device yt-dlp/Python/FFmpeg",
+  "abi": "arm64-v8a",
+  "minAndroid": "10 (API 29)"
+}

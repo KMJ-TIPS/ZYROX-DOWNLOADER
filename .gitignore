@@ -1,0 +1,20 @@
+# Local tooling, private signing material and build outputs
+.gradle/
+.kotlin/
+**/build/
+**/local.properties
+**/keystore.properties
+**/.local-signing/
+*.keystore
+*.jks
+*.p12
+*.pfx
+*.apk
+*.apks
+*.aab
+.env
+.env.*
+**/.idea/
+*.iml
+.DS_Store
+# Generated screenshots are intentionally tracked under docs/assets/screenshots.

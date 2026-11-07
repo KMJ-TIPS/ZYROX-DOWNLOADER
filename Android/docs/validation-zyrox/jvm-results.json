@@ -1,0 +1,45 @@
+{
+  "tests": 73,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "suites": [
+    {
+      "name": "com.zyrox.downloader.UpdateManagerTest",
+      "tests": 5
+    },
+    {
+      "name": "com.zyrox.downloader.MetadataSnapshotsTest",
+      "tests": 2
+    },
+    {
+      "name": "com.zyrox.downloader.ArtworkFilesTest",
+      "tests": 3
+    },
+    {
+      "name": "com.zyrox.downloader.FormatPlannerTest",
+      "tests": 15
+    },
+    {
+      "name": "com.zyrox.downloader.UrlUtilsTest",
+      "tests": 15
+    },
+    {
+      "name": "com.zyrox.downloader.FetcherTest",
+      "tests": 10
+    },
+    {
+      "name": "com.zyrox.downloader.TransferProgressTest",
+      "tests": 11
+    },
+    {
+      "name": "com.zyrox.downloader.DownloadFilesTest",
+      "tests": 8
+    },
+    {
+      "name": "com.zyrox.downloader.EngineGateTest",
+      "tests": 4
+    }
+  ],
+  "scope": "Existing JVM regression tests; Android device tests not run."
+}

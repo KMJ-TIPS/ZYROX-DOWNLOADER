@@ -1,0 +1,82 @@
+[
+  {
+    "width": 320,
+    "pageWidth": 320,
+    "viewport": 320,
+    "title": "ZYROX DOWNLOADER — Find it. Keep it.",
+    "downloadLinks": [
+      "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.0.0-arm64.apk",
+      "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.0.0-arm64.apk"
+    ],
+    "brokenImages": [],
+    "screenshotCount": 6,
+    "overflowElements": [
+      {
+        "tag": "DIV",
+        "class": "feature-orbit",
+        "right": 537
+      }
+    ],
+    "scriptErrors": [],
+    "galleryMoves": true,
+    "faqOpened": true,
+    "downloadHrefsCorrect": true
+  },
+  {
+    "width": 360,
+    "pageWidth": 360,
+    "viewport": 360,
+    "title": "ZYROX DOWNLOADER — Find it. Keep it.",
+    "downloadLinks": [
+      "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.0.0-arm64.apk",
+      "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.0.0-arm64.apk"
+    ],
+    "brokenImages": [],
+    "screenshotCount": 6,
+    "overflowElements": [
+      {
+        "tag": "DIV",
+        "class": "feature-orbit",
+        "right": 537
+      }
+    ],
+    "scriptErrors": [],
+    "galleryMoves": true,
+    "faqOpened": true,
+    "downloadHrefsCorrect": true
+  },
+  {
+    "width": 768,
+    "pageWidth": 768,
+    "viewport": 768,
+    "title": "ZYROX DOWNLOADER — Find it. Keep it.",
+    "downloadLinks": [
+      "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.0.0-arm64.apk",
+      "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.0.0-arm64.apk"
+    ],
+    "brokenImages": [],
+    "screenshotCount": 6,
+    "overflowElements": [],
+    "scriptErrors": [],
+    "galleryMoves": true,
+    "faqOpened": true,
+    "downloadHrefsCorrect": true
+  },
+  {
+    "width": 1440,
+    "pageWidth": 1440,
+    "viewport": 1440,
+    "title": "ZYROX DOWNLOADER — Find it. Keep it.",
+    "downloadLinks": [
+      "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.0.0-arm64.apk",
+      "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.0.0-arm64.apk"
+    ],
+    "brokenImages": [],
+    "screenshotCount": 6,
+    "overflowElements": [],
+    "scriptErrors": [],
+    "galleryMoves": true,
+    "faqOpened": true,
+    "downloadHrefsCorrect": true
+  }
+]
