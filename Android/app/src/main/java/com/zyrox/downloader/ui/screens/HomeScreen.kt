@@ -36,6 +36,8 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.graphics.drawscope.scale
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.platform.LocalContext
+import com.zyrox.downloader.audio.SoundEffects
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -53,6 +55,7 @@ import com.zyrox.downloader.util.UrlUtils
 @Composable
 fun HomeScreen(vm: HomeViewModel, incomingUrl: String?, onUrlConsumed: () -> Unit, onLibrary: () -> Unit = {}) {
     val a = LocalAurora.current
+    val context = LocalContext.current
     val clipboard = LocalClipboardManager.current
     val keyboard = LocalSoftwareKeyboardController.current
     val urlFocus = remember { FocusRequester() }
@@ -73,21 +76,21 @@ fun HomeScreen(vm: HomeViewModel, incomingUrl: String?, onUrlConsumed: () -> Uni
                     Text("D O W N L O A D E R", fontSize = 8.sp, fontWeight = FontWeight.Medium, color = a.textDim, lineHeight = 13.sp)
                 }
                 Spacer(Modifier.width(10.dp))
-                Box(Modifier.size(43.dp).clip(CircleShape).background(a.surface).border(1.dp, a.glassBorder, CircleShape).clickable(onClick = onLibrary), contentAlignment = Alignment.Center) {
+                Box(Modifier.size(43.dp).clip(CircleShape).background(a.surface).border(1.dp, a.glassBorder, CircleShape).clickable(onClick = { SoundEffects.tap(context); onLibrary() }), contentAlignment = Alignment.Center) {
                     Icon(VidIcons.VideoLibrary, "Open saved downloads", Modifier.size(20.dp), tint = a.text)
                 }
             }
             Spacer(Modifier.height(24.dp))
             if (vm.meta == null && !vm.fetching) { StudioHero(); Spacer(Modifier.height(22.dp)) }
             if (vm.meta == null) {
-                Surface(shape = RoundedCornerShape(24.dp), color = a.surface, border = androidx.compose.foundation.BorderStroke(1.dp, a.glassBorder)) {
+                Surface(shape = RoundedCornerShape(30.dp), color = a.surface, border = androidx.compose.foundation.BorderStroke(1.dp, a.glassBorder)) {
                     Column(Modifier.fillMaxWidth().padding(18.dp)) {
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             Column(Modifier.weight(1f)) {
                                 Text("Drop a link.", style = MaterialTheme.typography.titleLarge, letterSpacing = (-.6).sp)
                                 Text("We'll take it from here.", style = MaterialTheme.typography.bodySmall, color = a.textDim)
                             }
-                            TextButton(onClick = { clipboard.getText()?.text?.takeIf { it.isNotBlank() }?.let { vm.onUrlChange(UrlUtils.extractUrl(it) ?: it.trim()) } }, contentPadding = PaddingValues(horizontal = 10.dp)) {
+                            TextButton(onClick = { SoundEffects.tap(context); clipboard.getText()?.text?.takeIf { it.isNotBlank() }?.let { vm.onUrlChange(UrlUtils.extractUrl(it) ?: it.trim()) } }, contentPadding = PaddingValues(horizontal = 10.dp)) {
                                 Icon(VidIcons.Paste, null, Modifier.size(16.dp)); Spacer(Modifier.width(6.dp)); Text("Paste", style = MaterialTheme.typography.labelLarge)
                             }
                         }
@@ -102,7 +105,7 @@ fun HomeScreen(vm: HomeViewModel, incomingUrl: String?, onUrlConsumed: () -> Uni
                         }
                         if (vm.fetching) Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                             Text("Connecting to the source", style = MaterialTheme.typography.bodySmall, color = a.textDim, modifier = Modifier.weight(1f))
-                            TextButton(onClick = vm::cancelFetch) { Text("Cancel") }
+                            TextButton(onClick = { SoundEffects.tap(context); vm.cancelFetch() }) { Text("Cancel") }
                         } else {
                             Spacer(Modifier.height(12.dp))
                             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
@@ -114,11 +117,11 @@ fun HomeScreen(vm: HomeViewModel, incomingUrl: String?, onUrlConsumed: () -> Uni
                     }
                 }
             } else {
-                Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(a.surface).border(1.dp, a.glassBorder, RoundedCornerShape(14.dp)).padding(start = 12.dp), verticalAlignment = Alignment.CenterVertically) {
+                Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(22.dp)).background(a.surface).border(1.dp, a.glassBorder, RoundedCornerShape(22.dp)).padding(start = 12.dp), verticalAlignment = Alignment.CenterVertically) {
                     Icon(VidIcons.Link, null, Modifier.size(16.dp), tint = a.primary)
                     Spacer(Modifier.width(8.dp))
                     Text(vm.url, maxLines = 1, overflow = TextOverflow.Ellipsis, style = MaterialTheme.typography.bodySmall, color = a.textDim, modifier = Modifier.weight(1f))
-                    TextButton(onClick = vm::clearAll) { Text("New link", style = MaterialTheme.typography.labelSmall) }
+                    TextButton(onClick = { SoundEffects.tap(context); vm.clearAll() }) { Text("New link", style = MaterialTheme.typography.labelSmall) }
                 }
             }
             vm.error?.let { error ->
@@ -143,7 +146,7 @@ fun HomeScreen(vm: HomeViewModel, incomingUrl: String?, onUrlConsumed: () -> Uni
                 Spacer(Modifier.height(12.dp))
                 LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     items(listOf("YouTube", "Instagram", "Facebook", "TikTok", "X", "Vimeo")) { name ->
-                        Row(Modifier.clip(RoundedCornerShape(12.dp)).background(a.surface).border(1.dp, a.glassBorder, RoundedCornerShape(12.dp)).padding(horizontal = 11.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Row(Modifier.clip(RoundedCornerShape(17.dp)).background(a.surface).border(1.dp, a.glassBorder, RoundedCornerShape(17.dp)).padding(horizontal = 11.dp, vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
                             PlatformSymbol(name, Modifier.size(16.dp)); Spacer(Modifier.width(7.dp)); Text(name, style = MaterialTheme.typography.labelSmall, color = a.text)
                         }
                     }
@@ -152,8 +155,8 @@ fun HomeScreen(vm: HomeViewModel, incomingUrl: String?, onUrlConsumed: () -> Uni
                 if (history.isNotEmpty()) {
                     SectionHeading("Your latest finds", "View all", onLibrary)
                     history.take(2).forEach { item ->
-                        Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp)).clickable(onClick = onLibrary).padding(vertical = 9.dp), verticalAlignment = Alignment.CenterVertically) {
-                            MediaArtwork(item.thumbnailPath, item.thumbnailUrl, item.title, Modifier.size(76.dp, 54.dp).clip(RoundedCornerShape(12.dp)), item.mime.startsWith("audio"))
+                        Row(Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp)).clickable(onClick = { SoundEffects.tap(context); onLibrary() }).padding(vertical = 9.dp), verticalAlignment = Alignment.CenterVertically) {
+                            MediaArtwork(item.thumbnailPath, item.thumbnailUrl, item.title, Modifier.size(76.dp, 54.dp).clip(RoundedCornerShape(17.dp)), item.mime.startsWith("audio"))
                             Spacer(Modifier.width(12.dp))
                             Column(Modifier.weight(1f)) {
                                 Text(item.title, style = MaterialTheme.typography.labelLarge, maxLines = 2, overflow = TextOverflow.Ellipsis)
@@ -179,46 +182,47 @@ private fun StudioHero() {
     val a = LocalAurora.current
     val fontScale = LocalDensity.current.fontScale
     val largeText = fontScale >= 1.25f
-    BoxWithConstraints(Modifier.fillMaxWidth().height((175f * fontScale.coerceAtLeast(1f)).dp)) {
+    BoxWithConstraints(Modifier.fillMaxWidth().height((211f * fontScale.coerceAtLeast(1f)).dp)) {
         if (!largeText && maxWidth >= 280.dp) Canvas(Modifier.align(Alignment.CenterEnd).width(146.dp).fillMaxHeight()) {
             scale(size.width / 160f, size.height / 182f, pivot = Offset.Zero) {
-                val mint = Color(0xFFB6F5C5)
-                val ink = Color(0xFF14372B)
-                drawCircle(Brush.radialGradient(listOf(mint.copy(alpha = .11f), Color.Transparent), Offset(95f, 90f), 91f), 91f, Offset(95f, 90f))
+                val crystal = Color(0xFF92B7FF)
+                val ink = Color(0xFF192E59)
+                drawCircle(Brush.radialGradient(listOf(crystal.copy(alpha = .11f), Color.Transparent), Offset(95f, 90f), 91f), 91f, Offset(95f, 90f))
                 rotate(-16f, Offset(87f, 87f)) {
-                    drawRoundRect(mint.copy(alpha = .05f), Offset(35f, 31f), Size(108f, 116f), CornerRadius(23f))
-                    drawRoundRect(mint.copy(alpha = .17f), Offset(35f, 31f), Size(108f, 116f), CornerRadius(23f), style = Stroke(1.2f))
+                    drawRoundRect(crystal.copy(alpha = .05f), Offset(35f, 31f), Size(108f, 116f), CornerRadius(23f))
+                    drawRoundRect(crystal.copy(alpha = .17f), Offset(35f, 31f), Size(108f, 116f), CornerRadius(23f), style = Stroke(1.2f))
                 }
                 rotate(9f, Offset(87f, 87f)) {
                     drawRoundRect(ink, Offset(32f, 29f), Size(108f, 116f), CornerRadius(23f))
-                    drawRoundRect(mint.copy(alpha = .45f), Offset(32f, 29f), Size(108f, 116f), CornerRadius(23f), style = Stroke(1.2f))
-                    drawCircle(mint, 24f, Offset(87f, 77f))
+                    drawRoundRect(crystal.copy(alpha = .45f), Offset(32f, 29f), Size(108f, 116f), CornerRadius(23f), style = Stroke(1.2f))
+                    drawCircle(crystal, 24f, Offset(87f, 77f))
                     drawLine(ink, Offset(87f, 65f), Offset(87f, 87f), 3.5f, StrokeCap.Round)
                     drawPath(Path().apply { moveTo(78f, 79f); lineTo(87f, 88f); lineTo(96f, 79f) }, ink, style = Stroke(3.5f, cap = StrokeCap.Round))
-                    drawLine(mint.copy(alpha = .6f), Offset(61f, 117f), Offset(109f, 117f), 3f, StrokeCap.Round)
-                    drawLine(mint.copy(alpha = .22f), Offset(70f, 125f), Offset(100f, 125f), 3f, StrokeCap.Round)
+                    drawLine(crystal.copy(alpha = .6f), Offset(61f, 117f), Offset(109f, 117f), 3f, StrokeCap.Round)
+                    drawLine(crystal.copy(alpha = .22f), Offset(70f, 125f), Offset(100f, 125f), 3f, StrokeCap.Round)
                 }
                 drawCircle(if (a.isDark) a.bg else a.surface, 21f, Offset(44f, 139f))
-                drawCircle(mint.copy(alpha = .5f), 20f, Offset(44f, 139f), style = Stroke(1f))
+                drawCircle(crystal.copy(alpha = .5f), 20f, Offset(44f, 139f), style = Stroke(1f))
                 for (i in 0..4) {
                     val h = listOf(7f, 14f, 20f, 11f, 6f)[i]
-                    drawLine(if (a.isDark) mint else a.primary, Offset(34f + i * 5f, 139f - h / 2), Offset(34f + i * 5f, 139f + h / 2), 2.2f, StrokeCap.Round)
+                    drawLine(if (a.isDark) crystal else a.primary, Offset(34f + i * 5f, 139f - h / 2), Offset(34f + i * 5f, 139f + h / 2), 2.2f, StrokeCap.Round)
                 }
-                drawCircle(mint, 3f, Offset(139f, 23f))
-                drawCircle(mint.copy(alpha = .3f), 2f, Offset(15f, 81f))
+                drawCircle(crystal, 3f, Offset(139f, 23f))
+                drawCircle(crystal.copy(alpha = .3f), 2f, Offset(15f, 81f))
             }
         }
         Column(Modifier.align(Alignment.CenterStart).widthIn(max = if (largeText) 600.dp else 220.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Box(Modifier.size(5.dp).clip(CircleShape).background(a.primary))
                 Spacer(Modifier.width(7.dp))
-                Text("A WORLD WORTH SAVING", style = MaterialTheme.typography.labelSmall, fontSize = 8.sp, color = a.textDim, letterSpacing = 1.1.sp)
+                Text("YOUR MEDIA. IN A NEW DIMENSION.", style = MaterialTheme.typography.labelSmall, fontSize = 8.sp, color = a.textDim, letterSpacing = 1.1.sp)
             }
             Spacer(Modifier.height(12.dp))
-            Text("Find it.", color = a.text, fontWeight = FontWeight.ExtraBold, fontSize = 40.sp, lineHeight = 43.sp, letterSpacing = (-1.8).sp)
-            Text("Keep it.", color = a.primary, fontWeight = FontWeight.ExtraBold, fontSize = 40.sp, lineHeight = 43.sp, letterSpacing = (-1.8).sp)
+            Text("Save it.", color = a.text, fontWeight = FontWeight.ExtraBold, fontSize = 35.sp, lineHeight = 37.sp, letterSpacing = (-1.3).sp)
+            Text("Play it.", color = a.text, fontWeight = FontWeight.ExtraBold, fontSize = 35.sp, lineHeight = 37.sp, letterSpacing = (-1.3).sp)
+            Text("Keep it.", color = a.primary, fontWeight = FontWeight.ExtraBold, fontSize = 35.sp, lineHeight = 37.sp, letterSpacing = (-1.3).sp)
             Spacer(Modifier.height(10.dp))
-            Text("Videos. Music. Your favorites.", color = a.textDim, style = MaterialTheme.typography.bodySmall, fontSize = 11.sp)
+            Text("Video. Music. Ready when you are.", color = a.textDim, style = MaterialTheme.typography.bodySmall, fontSize = 11.sp)
         }
     }
 }
@@ -274,7 +278,7 @@ private fun ResultCard(vm: HomeViewModel, onLibrary: () -> Unit) {
     var expanded by rememberSaveable(info.webpageUrl) { mutableStateOf(false) }
     val options = vm.formats.filter { it.isAudioOnly == audio }
     Column {
-        Box(Modifier.fillMaxWidth().aspectRatio(16f / 9f).clip(RoundedCornerShape(24.dp))) {
+        Box(Modifier.fillMaxWidth().aspectRatio(16f / 9f).clip(RoundedCornerShape(30.dp))) {
             MediaArtwork(info.thumbnailPath, info.thumbnailUrl, info.title, Modifier.fillMaxSize())
             Box(Modifier.fillMaxSize().background(Brush.verticalGradient(listOf(Color.Transparent, Color.Black.copy(alpha = .7f)))))
             Row(Modifier.align(Alignment.BottomStart).fillMaxWidth().padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -308,11 +312,12 @@ private fun ResultCard(vm: HomeViewModel, onLibrary: () -> Unit) {
 @Composable
 private fun QualityTile(option: FormatOption, selected: Boolean, modifier: Modifier, onClick: () -> Unit) {
     val a = LocalAurora.current
-    val shape = RoundedCornerShape(16.dp)
+    val shape = RoundedCornerShape(23.dp)
     val interaction = remember { MutableInteractionSource() }
+    val context = LocalContext.current
     Column(modifier.pressScale(interaction).clip(shape).background(if (selected) a.primary.copy(alpha = .1f) else a.surface)
         .border(if (selected) 1.5.dp else 1.dp, if (selected) a.primary.copy(alpha = .8f) else a.glassBorder, shape)
-        .selectable(selected, role = Role.RadioButton, interactionSource = interaction, indication = ripple(), onClick = onClick).padding(14.dp)) {
+        .selectable(selected, role = Role.RadioButton, interactionSource = interaction, indication = ripple(), onClick = { if (!selected) SoundEffects.tap(context); onClick() }).padding(16.dp)) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Text(option.label.removePrefix("Best — "), style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.Bold, color = if (selected) a.primary else a.text, modifier = Modifier.weight(1f))
             Spacer(Modifier.width(4.dp))

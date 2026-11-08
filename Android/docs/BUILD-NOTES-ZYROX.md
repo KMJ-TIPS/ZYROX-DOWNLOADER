@@ -8,7 +8,7 @@ Requirements: JDK 17, Android SDK Platform 36 and Build-Tools 36.0.0. The Gradle
 
 The default ARM64 build supports Android 10+ on ARM64 phones. To select another supported ABI, pass `-PtargetAbis=armeabi-v7a` or `-PtargetAbis=x86_64`. A comma-separated list packages multiple ABIs into one larger APK.
 
-This fork has package name `com.zyrox.downloader`, version name `1.0.0`, version code `1`. It installs separately from VidGrab.
+This fork has package name `com.zyrox.downloader`, version name `1.1.0`, version code `2`. It installs separately from VidGrab. The distributed v1.1.0 APK uses the same ZYROX development certificate as v1.0.0 and can update that build in place.
 
 Without a local release key, builds use the fork's development signing configuration, stored in `.local-signing/zyrox-debug.keystore`; do not use VidGrab's signing identity. A missing debug keystore can be generated with JDK `keytool`:
 

@@ -1,0 +1,108 @@
+{
+  "kind": "App UI renders, not device captures",
+  "applicationVersion": "1.1.0",
+  "renderer": "Paparazzi 2.0.0-alpha02 / Android layoutlib",
+  "deviceConfiguration": "Pixel 5, 1080 x 2340, system chrome hidden",
+  "productionEntryPoints": [
+    "AppRoot",
+    "ZyroxSplashView"
+  ],
+  "state": "Empty first-use library; fresh-install sound defaults; no native engine, audio playback, downloads, account or network initialized",
+  "settingsApiReason": "Supported Android 10 scoped-storage path; layoutlib has no real StorageManager/package service",
+  "settingsInspectionMode": "Settings uses standard Compose inspection mode for default preference values and unavailable host services; production settings layout is unchanged",
+  "images": [
+    {
+      "file": "home-dark.png",
+      "pixels": [
+        1080,
+        2340
+      ],
+      "api": 36,
+      "framesRecorded": 4,
+      "selectedFrame": 3,
+      "selectedTimeMillis": 1500,
+      "sha256": "f809eae325a91cba886db61ed4d1bc133b73349b6d958a64fe9744d68324b278",
+      "sourceRecording": "com.zyrox.downloader_ProductionScreenshots_homeDark_home-dark.png",
+      "sourceSha256": "9ec6068dc8a1996caf7e11469f253a5666f5851651c7598963afa7217c31c803"
+    },
+    {
+      "file": "home-light.png",
+      "pixels": [
+        1080,
+        2340
+      ],
+      "api": 36,
+      "framesRecorded": 4,
+      "selectedFrame": 3,
+      "selectedTimeMillis": 1500,
+      "sha256": "e819462c99644c7a962b3322347c9131fff775ac841a991b5352e99d081a4777",
+      "sourceRecording": "com.zyrox.downloader_ProductionScreenshots_homeLight_home-light.png",
+      "sourceSha256": "2b3973c1f418f275247080dacc547ca5525aa1823c78adc22e081fa7a1b5c20e"
+    },
+    {
+      "file": "library-dark.png",
+      "pixels": [
+        1080,
+        2340
+      ],
+      "api": 36,
+      "framesRecorded": 4,
+      "selectedFrame": 3,
+      "selectedTimeMillis": 1500,
+      "sha256": "26ec49e6b4a71c8ba7d43595c4931dcd2ab2f1420577105940828786bbf78698",
+      "sourceRecording": "com.zyrox.downloader_ProductionScreenshots_libraryDark_downloads-dark.png",
+      "sourceSha256": "186982dce3796509577698158fd511025338980e7182f211689ac355fa966f8b"
+    },
+    {
+      "file": "music-dark.png",
+      "pixels": [
+        1080,
+        2340
+      ],
+      "api": 36,
+      "framesRecorded": 4,
+      "selectedFrame": 3,
+      "selectedTimeMillis": 1500,
+      "sha256": "0924dd8ccd49c1d2375906b225e63b42e0446253734595e9b15a2289e97f123c",
+      "sourceRecording": "com.zyrox.downloader_ProductionScreenshots_musicDark_music-dark.png",
+      "sourceSha256": "8f7588b4775128a2ef028db3eac9fa9c2c6c954ea0d073710dc31d9429f997f9"
+    },
+    {
+      "file": "settings-dark.png",
+      "pixels": [
+        1080,
+        2340
+      ],
+      "api": 29,
+      "framesRecorded": 4,
+      "selectedFrame": 3,
+      "selectedTimeMillis": 1500,
+      "sha256": "b8370018fb1aa49b94904364910e57a2c17b747d56fbe346328319ab813897e9",
+      "sourceRecording": "com.zyrox.downloader_ProductionScreenshots_settingsDark_settings-dark.png",
+      "sourceSha256": "a88124df12681a5408fed63b08586587f66053358cf96acbedf39a94ab5467ee"
+    },
+    {
+      "file": "splash.png",
+      "pixels": [
+        1080,
+        2340
+      ],
+      "api": 36,
+      "framesRecorded": 4,
+      "selectedFrame": 3,
+      "selectedTimeMillis": 1500,
+      "sha256": "bbddfa768339fa5d0427832851dff859fbeeea8cc98900f985469d82ab40c406",
+      "sourceRecording": "com.zyrox.downloader_ProductionScreenshots_splash_splash.png",
+      "sourceSha256": "9bfef0d43450b0e2f7659d414bb83740b919acabe9e5b86e43fb2c5e0235207f"
+    }
+  ],
+  "date": "2026-11-08",
+  "timezone": "Asia/Kolkata",
+  "verification": {
+    "screenshotTests": 6,
+    "failures": 0,
+    "errors": 0,
+    "visualInspection": "All six actual production UI renders inspected: blue theme, raised curved buttons, new download logo/splash, selected tabs, version1.1.0 and default sound toggles are correct; animations settled.",
+    "audioPlaybackOnDeviceTested": false
+  }
+}

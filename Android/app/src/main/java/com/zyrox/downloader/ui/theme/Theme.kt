@@ -28,18 +28,18 @@ data class AuroraColors(
     val gradientSoft get() = Brush.linearGradient(listOf(violet.copy(alpha = .13f), cyan.copy(alpha = .035f)))
 }
 private val Dark = AuroraColors(
-    Color(0xFF0A1014), Color(0xFF121D23), Color(0xFF1D2A30),
-    Color(0xFFF4F4EB), Color(0xFFA2AFB2), Color(0xFF7D9297),
-    Color(0xFF121D23), Color(0xFF2B3C42),
-    Color(0xFFB6F5C5), Color(0xFF7EE0CC), Color(0xFFBDB4EF),
-    Color(0xFFB6F5C5), Color(0xFFFFA3A3), true
+    Color(0xFF080D1B), Color(0xFF111C32), Color(0xFF1B2B49),
+    Color(0xFFF5F8FF), Color(0xFFA4B4D0), Color(0xFF8094B6),
+    Color(0xFF111C32), Color(0xFF2D4167),
+    Color(0xFF92B7FF), Color(0xFF67DFFF), Color(0xFFC6ADFF),
+    Color(0xFF7DE6BE), Color(0xFFFFA3B6), true
 )
 private val Light = AuroraColors(
-    Color(0xFFF2F6F0), Color(0xFFFFFFFF), Color(0xFFE5EDE6),
-    Color(0xFF102621), Color(0xFF52675F), Color(0xFF61776F),
-    Color(0xFFFFFFFF), Color(0xFFD6E2D9),
-    Color(0xFF176548), Color(0xFF167565), Color(0xFF72659F),
-    Color(0xFF176548), Color(0xFFB63D43), false
+    Color(0xFFF2F6FF), Color(0xFFFFFFFF), Color(0xFFE4ECFA),
+    Color(0xFF102044), Color(0xFF526889), Color(0xFF61799E),
+    Color(0xFFFFFFFF), Color(0xFFCDDBF1),
+    Color(0xFF245AD4), Color(0xFF157EA6), Color(0xFF8060BA),
+    Color(0xFF168464), Color(0xFFB63D54), false
 )
 val LocalAurora = staticCompositionLocalOf { Dark }
 private val Typography = Typography(
@@ -58,20 +58,20 @@ fun ZyroxTheme(mode: Prefs.ThemeMode = Prefs.ThemeMode.System, content: @Composa
     val dark = when (mode) { Prefs.ThemeMode.Dark -> true; Prefs.ThemeMode.Light -> false; else -> isSystemInDarkTheme() }
     val a = if (dark) Dark else Light
     val scheme = if (dark) darkColorScheme(
-        primary = a.primary, onPrimary = Color(0xFF102B20), primaryContainer = Color(0xFF203D31), onPrimaryContainer = a.primary,
-        secondary = a.cyan, onSecondary = Color(0xFF0C2F2A), secondaryContainer = a.surfaceHigh, onSecondaryContainer = a.cyan,
-        tertiary = a.magenta, onTertiary = Color(0xFF29233D),
+        primary = a.primary, onPrimary = Color(0xFF0B2149), primaryContainer = Color(0xFF233D68), onPrimaryContainer = a.primary,
+        secondary = a.cyan, onSecondary = Color(0xFF073347), secondaryContainer = a.surfaceHigh, onSecondaryContainer = a.cyan,
+        tertiary = a.magenta, onTertiary = Color(0xFF342047),
         background = a.bg, onBackground = a.text, surface = a.surface, onSurface = a.text,
         surfaceVariant = a.surfaceHigh, onSurfaceVariant = a.textDim, outline = a.glassBorder, error = a.danger
     ) else lightColorScheme(
-        primary = a.primary, onPrimary = Color.White, primaryContainer = Color(0xFFD7EFDC), onPrimaryContainer = a.text,
-        secondary = a.cyan, secondaryContainer = Color(0xFFD9EEE5), onSecondaryContainer = a.primary,
+        primary = a.primary, onPrimary = Color.White, primaryContainer = Color(0xFFDCE7FF), onPrimaryContainer = a.text,
+        secondary = a.cyan, secondaryContainer = Color(0xFFD8EFFA), onSecondaryContainer = a.primary,
         tertiary = a.magenta,
         background = a.bg, onBackground = a.text, surface = a.surface, onSurface = a.text,
         surfaceVariant = a.surfaceHigh, onSurfaceVariant = a.textDim, outline = a.glassBorder, error = a.danger
     )
     CompositionLocalProvider(LocalAurora provides a) {
         MaterialTheme(colorScheme = scheme, typography = Typography,
-            shapes = Shapes(extraSmall = RoundedCornerShape(8.dp), small = RoundedCornerShape(12.dp), medium = RoundedCornerShape(16.dp), large = RoundedCornerShape(22.dp), extraLarge = RoundedCornerShape(28.dp)), content = content)
+            shapes = Shapes(extraSmall = RoundedCornerShape(8.dp), small = RoundedCornerShape(16.dp), medium = RoundedCornerShape(22.dp), large = RoundedCornerShape(28.dp), extraLarge = RoundedCornerShape(34.dp)), content = content)
     }
 }

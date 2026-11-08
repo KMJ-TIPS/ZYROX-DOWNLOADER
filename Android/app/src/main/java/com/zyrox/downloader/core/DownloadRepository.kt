@@ -413,7 +413,7 @@ object DownloadRepository {
             runCatching { persistNow() }
             record
         } ?: return
-        DownloadService.notifyResult(appCtx, true, item.title, "${item.formatLabel} · ${UrlUtils.formatBytes(size)} saved")
+        DownloadService.notifyResult(appCtx, true, item.title, "${item.formatLabel} · ${UrlUtils.formatBytes(size)} saved", resultId = item.id)
         if (entry.thumbnailPath == null) appScope.launch {
             val uri = if (isAudio) null else MediaSaver.uriFor(appCtx, entry.filePath, entry.contentUri)
             val art = ThumbnailStore.capture(appCtx, item.id, item.thumbnailUrl, uri)
@@ -687,7 +687,7 @@ object DownloadRepository {
         patch(item.id) { it.copy(status = DlStatus.FAILED, error = msg) }
         // v2.2.2: "Download failed" dismissible notification
         if (::appCtx.isInitialized) {
-            DownloadService.notifyResult(appCtx, success = false, title = item.title, detail = msg)
+            DownloadService.notifyResult(appCtx, success = false, title = item.title, detail = msg, resultId = item.id)
         }
         persist()
     }

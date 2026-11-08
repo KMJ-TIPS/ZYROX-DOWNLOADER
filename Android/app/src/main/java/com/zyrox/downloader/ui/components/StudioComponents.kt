@@ -19,6 +19,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Brush
+import com.zyrox.downloader.audio.SoundEffects
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -33,7 +37,7 @@ import com.zyrox.downloader.ui.theme.LocalAurora
 fun StudioInput(value: String, onValueChange: (String) -> Unit, hint: String, icon: ImageVector,
     modifier: Modifier = Modifier, uri: Boolean = false, onGo: () -> Unit = {}) {
     val a = LocalAurora.current
-    val shape = RoundedCornerShape(14.dp)
+    val shape = RoundedCornerShape(22.dp)
     val interaction = remember { MutableInteractionSource() }
     val focused by interaction.collectIsFocusedAsState()
     val borderColor by animateColorAsState(if (focused) a.primary.copy(alpha = .7f) else a.glassBorder, label = "input focus")
@@ -59,13 +63,14 @@ fun StudioInput(value: String, onValueChange: (String) -> Unit, hint: String, ic
 @Composable
 fun StudioTabs(labels: List<String>, selected: Int, onSelect: (Int) -> Unit, modifier: Modifier = Modifier, enabled: List<Boolean> = labels.map { true }) {
     val a = LocalAurora.current
-    Row(modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(a.surfaceHigh).padding(4.dp), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+    val context = LocalContext.current
+    Row(modifier.fillMaxWidth().clip(RoundedCornerShape(24.dp)).background(a.bg).border(1.dp, a.glassBorder, RoundedCornerShape(24.dp)).padding(5.dp), horizontalArrangement = Arrangement.spacedBy(4.dp)) {
         labels.forEachIndexed { index, label ->
             val active = selected == index
-            val background by animateColorAsState(if (active) a.primary.copy(alpha = if (a.isDark) .15f else .1f) else Color.Transparent, label = "tab background")
+            val background by animateColorAsState(if (active) a.primary.copy(alpha = if (a.isDark) .2f else .12f) else Color.Transparent, label = "tab background")
             val interaction = remember { MutableInteractionSource() }
-            Box(Modifier.weight(1f).heightIn(min = 42.dp).pressScale(interaction).clip(RoundedCornerShape(12.dp))
-                .background(background).selectable(active, enabled = enabled.getOrElse(index) { true }, interactionSource = interaction, indication = ripple(), role = Role.Tab, onClick = { onSelect(index) }), contentAlignment = Alignment.Center) {
+            Box(Modifier.weight(1f).heightIn(min = 42.dp).pressScale(interaction).clip(RoundedCornerShape(19.dp))
+                .background(background).border(1.dp, if (active) a.primary.copy(alpha = .28f) else Color.Transparent, RoundedCornerShape(19.dp)).selectable(active, enabled = enabled.getOrElse(index) { true }, interactionSource = interaction, indication = ripple(), role = Role.Tab, onClick = { if (selected != index) SoundEffects.tap(context); onSelect(index) }), contentAlignment = Alignment.Center) {
                 Text(label, style = MaterialTheme.typography.labelLarge, fontWeight = if (active) FontWeight.Bold else FontWeight.Medium,
                     color = if (!enabled.getOrElse(index) { true }) a.textFaint.copy(alpha = .5f) else if (active) a.primary else a.textDim,
                     modifier = Modifier.padding(horizontal = 8.dp, vertical = 10.dp))

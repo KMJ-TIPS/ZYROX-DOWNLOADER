@@ -32,11 +32,12 @@ import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import java.io.File;
+import com.zyrox.downloader.audio.SoundEffects;
 import java.util.Locale;
 
 /** Local-only media playback. Audio focus and player resources follow the visible Activity. */
 public final class PlayerActivity extends Activity {
-    private static final int BG = 0xFF0A1014, MINT = 0xFFB6F5C5, WHITE = 0xFFF4F4EB, DIM = 0xFFA2AFB2;
+    private static final int BG = 0xFF080D1B, ACCENT = 0xFF92B7FF, WHITE = 0xFFF5F8FF, DIM = 0xFFA4B4D0;
     private final Handler handler = new Handler(Looper.getMainLooper());
     private FocusVideoView video;
     private MediaPlayer audio;
@@ -109,16 +110,16 @@ public final class PlayerActivity extends Activity {
         TextView back = action("‹", 34, WHITE);
         back.setContentDescription("Back to library");
         back.setGravity(Gravity.CENTER);
-        back.setOnClickListener(v -> finish());
+        back.setOnClickListener(v -> { SoundEffects.tap(this); finish(); });
         bar.addView(back, new LinearLayout.LayoutParams(dp(48), dp(48)));
-        TextView brand = text("Z Y R O X", 15, MINT);
+        TextView brand = text("Z Y R O X", 15, ACCENT);
         brand.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
         bar.addView(brand, new LinearLayout.LayoutParams(0, dp(48), 1));
         brand.setGravity(Gravity.CENTER_VERTICAL);
-        TextView share = action("Share", 14, MINT);
+        TextView share = action("Share", 14, ACCENT);
         share.setContentDescription("Share this media file");
         share.setGravity(Gravity.CENTER);
-        share.setOnClickListener(v -> shareMedia());
+        share.setOnClickListener(v -> { SoundEffects.tap(this); shareMedia(); });
         bar.addView(share, new LinearLayout.LayoutParams(dp(64), dp(48)));
         root.addView(bar);
         String title = getIntent().getStringExtra("title");
@@ -133,10 +134,10 @@ public final class PlayerActivity extends Activity {
         TextView sub = text(isAudio ? "OFFLINE AUDIO  ·  NO ADS" : "OFFLINE VIDEO  ·  NO ADS", 10, DIM);
         sub.setLetterSpacing(.12f);
         root.addView(sub);
-        fallback = action("Open in another player", 14, MINT);
+        fallback = action("Open in another player", 14, ACCENT);
         fallback.setGravity(Gravity.CENTER);
         fallback.setVisibility(View.GONE);
-        fallback.setOnClickListener(v -> openExternally());
+        fallback.setOnClickListener(v -> { SoundEffects.tap(this); openExternally(); });
         if (isAudio) setupAudio(root, attrs); else setupVideo(root);
         root.addView(fallback, new LinearLayout.LayoutParams(-1, dp(52)));
     }
@@ -206,10 +207,10 @@ public final class PlayerActivity extends Activity {
         LinearLayout.LayoutParams ap = new LinearLayout.LayoutParams(-1, 0, 1);
         ap.topMargin = dp(24); ap.bottomMargin = dp(24);
         root.addView(art, ap);
-        TextView note = text("♫", 100, MINT);
+        TextView note = text("♫", 100, ACCENT);
         note.setImportantForAccessibility(View.IMPORTANT_FOR_ACCESSIBILITY_NO);
         note.setGravity(Gravity.CENTER);
-        GradientDrawable tile = new GradientDrawable(GradientDrawable.Orientation.TL_BR, new int[]{0xFF17382C, 0xFF121D23});
+        GradientDrawable tile = new GradientDrawable(GradientDrawable.Orientation.TL_BR, new int[]{0xFF1748A5, 0xFF111C32});
         tile.setCornerRadius(dp(32));
         note.setBackground(tile);
         art.addView(note, new FrameLayout.LayoutParams(dp(236), dp(236), Gravity.CENTER));
@@ -226,17 +227,17 @@ public final class PlayerActivity extends Activity {
         seek = new SeekBar(this);
         seek.setContentDescription("Audio position");
         seek.setEnabled(false);
-        seek.setProgressTintList(android.content.res.ColorStateList.valueOf(MINT));
-        seek.setThumbTintList(android.content.res.ColorStateList.valueOf(MINT));
+        seek.setProgressTintList(android.content.res.ColorStateList.valueOf(ACCENT));
+        seek.setThumbTintList(android.content.res.ColorStateList.valueOf(ACCENT));
         root.addView(seek, new LinearLayout.LayoutParams(-1, dp(48)));
         play = action("Loading…", 18, BG);
         play.setGravity(Gravity.CENTER);
         play.setTypeface(Typeface.DEFAULT, Typeface.BOLD);
         GradientDrawable button = new GradientDrawable();
-        button.setColor(MINT); button.setCornerRadius(dp(18));
+        button.setColor(ACCENT); button.setCornerRadius(dp(18));
         play.setBackground(button); play.setEnabled(false);
         root.addView(play, new LinearLayout.LayoutParams(-1, dp(60)));
-        play.setOnClickListener(v -> { if (!prepared) return; if (isPlaying()) pauseByUser(); else requestPlayback(); });
+        play.setOnClickListener(v -> { if (!prepared) return; SoundEffects.tap(this); if (isPlaying()) pauseByUser(); else requestPlayback(); });
         seek.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override public void onProgressChanged(SeekBar s, int position, boolean user) {
                 if (user && audio != null && prepared) {
@@ -415,7 +416,7 @@ public final class PlayerActivity extends Activity {
         TextView view = new TextView(this) {
             @Override public CharSequence getAccessibilityClassName() { return "android.widget.Button"; }
         };
-        view.setText(value); view.setTextColor(color); view.setTextSize(size); view.setFocusable(true); view.setClickable(true);
+        view.setText(value); view.setTextColor(color); view.setTextSize(size); view.setFocusable(true); view.setClickable(true); view.setSoundEffectsEnabled(false);
         return view;
     }
     private int dp(int value) { return Math.round(value * getResources().getDisplayMetrics().density); }

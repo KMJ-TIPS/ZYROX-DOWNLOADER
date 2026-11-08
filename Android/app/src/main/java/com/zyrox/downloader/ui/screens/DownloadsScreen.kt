@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.zyrox.downloader.core.*
+import com.zyrox.downloader.audio.SoundEffects
 import com.zyrox.downloader.ui.components.*
 import com.zyrox.downloader.ui.theme.LocalAurora
 import com.zyrox.downloader.util.MediaSaver
@@ -63,12 +64,12 @@ fun DownloadsScreen(audioOnly: Boolean = false) {
                         Spacer(Modifier.height(5.dp))
                         Text(if (audioOnly) "Your soundtrack. Saved for offline." else "Everything worth keeping, right here.", style = MaterialTheme.typography.bodySmall, color = a.textDim)
                     }
-                    Box(Modifier.size(53.dp).clip(RoundedCornerShape(18.dp)).background(a.primary.copy(alpha = .1f)).border(1.dp, a.primary.copy(alpha = .17f), RoundedCornerShape(18.dp)), contentAlignment = Alignment.Center) {
+                    Box(Modifier.size(53.dp).clip(RoundedCornerShape(23.dp)).background(a.primary.copy(alpha = .1f)).border(1.dp, a.primary.copy(alpha = .17f), RoundedCornerShape(23.dp)), contentAlignment = Alignment.Center) {
                         Icon(if (audioOnly) VidIcons.MusicNote else VidIcons.VideoLibrary, null, Modifier.size(24.dp), tint = a.primary)
                     }
                 }
                 Spacer(Modifier.height(20.dp))
-                Surface(shape = RoundedCornerShape(22.dp), color = a.surface, border = androidx.compose.foundation.BorderStroke(1.dp, a.glassBorder)) {
+                Surface(shape = RoundedCornerShape(28.dp), color = a.surface, border = androidx.compose.foundation.BorderStroke(1.dp, a.glassBorder)) {
                     Row(Modifier.fillMaxWidth().padding(vertical = 19.dp), horizontalArrangement = Arrangement.SpaceEvenly, verticalAlignment = Alignment.CenterVertically) {
                         if (!audioOnly) {
                             LibraryStat(history.count { !it.mime.startsWith("audio") }.toString(), "Videos")
@@ -120,9 +121,10 @@ private fun LibraryStat(value: String, label: String) {
 @Composable
 private fun ActiveCard(item: DownloadItem) {
     val a = LocalAurora.current
+    val context = LocalContext.current
     val pending = item.status.isPending()
     val progress by animateFloatAsState(if (item.progress.isFinite()) (item.progress / 100f).coerceIn(0f, 1f) else 0f, tween(300), label = "download")
-    Surface(shape = RoundedCornerShape(22.dp), color = a.surface,
+    Surface(shape = RoundedCornerShape(28.dp), color = a.surface,
         border = androidx.compose.foundation.BorderStroke(1.dp, if (item.status == DlStatus.FAILED) a.danger.copy(alpha = .4f) else if (pending) a.primary.copy(alpha = .25f) else a.glassBorder)) {
         Column(Modifier.fillMaxWidth().padding(16.dp)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -146,7 +148,7 @@ private fun ActiveCard(item: DownloadItem) {
                     Text(item.title, style = MaterialTheme.typography.titleMedium, maxLines = 2, overflow = TextOverflow.Ellipsis)
                     Text(item.formatLabel, style = MaterialTheme.typography.bodySmall, color = a.textDim)
                 }
-                IconButton(onClick = { if (pending) DownloadRepository.cancel(item.id) else DownloadRepository.dismiss(item.id) }) {
+                IconButton(onClick = { SoundEffects.tap(context); if (pending) DownloadRepository.cancel(item.id) else DownloadRepository.dismiss(item.id) }) {
                     Icon(Icons.Default.Clear, if (pending) "Cancel download" else "Dismiss download", tint = a.textDim, modifier = Modifier.size(20.dp))
                 }
             }
@@ -173,7 +175,7 @@ private fun ActiveCard(item: DownloadItem) {
                 } else LinearProgressIndicator(modifier = Modifier.fillMaxWidth().height(4.dp), color = a.primary, trackColor = a.surfaceHigh)
             }
             if (item.status == DlStatus.FAILED) {
-                TextButton(onClick = { DownloadRepository.retry(item.id) }, contentPadding = PaddingValues(horizontal = 0.dp)) {
+                TextButton(onClick = { SoundEffects.tap(context); DownloadRepository.retry(item.id) }, contentPadding = PaddingValues(horizontal = 0.dp)) {
                     Icon(VidIcons.Update, null, Modifier.size(16.dp)); Spacer(Modifier.width(7.dp)); Text("Try again")
                 }
             }
@@ -189,8 +191,8 @@ private fun HistoryCard(entry: HistoryEntry) {
     var menu by remember { mutableStateOf(false) }
     var deleting by remember { mutableStateOf(false) }
     val date = remember(entry.completedAtMs) { SimpleDateFormat("d MMM", Locale.getDefault()).format(Date(entry.completedAtMs)) }
-    fun open(share: Boolean) { scope.launch { launchSaved(ctx, entry, share) } }
-    Surface(onClick = { open(false) }, shape = RoundedCornerShape(20.dp), color = a.surface, border = androidx.compose.foundation.BorderStroke(1.dp, a.glassBorder.copy(alpha = .65f))) {
+    fun open(share: Boolean) { SoundEffects.tap(ctx); scope.launch { launchSaved(ctx, entry, share) } }
+    Surface(onClick = { open(false) }, shape = RoundedCornerShape(26.dp), color = a.surface, border = androidx.compose.foundation.BorderStroke(1.dp, a.glassBorder.copy(alpha = .65f))) {
         Row(Modifier.fillMaxWidth().padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
             Box(Modifier.size(82.dp, 78.dp).clip(RoundedCornerShape(13.dp))) {
                 MediaArtwork(entry.thumbnailPath, entry.thumbnailUrl, entry.title, Modifier.fillMaxSize(), entry.mime.startsWith("audio"))
@@ -206,11 +208,11 @@ private fun HistoryCard(entry: HistoryEntry) {
                 Text("${UrlUtils.formatBytes(entry.sizeBytes)} · $date", color = a.textDim, style = MaterialTheme.typography.bodySmall)
             }
             Box {
-                IconButton(onClick = { menu = true }) { Icon(Icons.Default.MoreVert, "More options for ${entry.title}", tint = a.textDim) }
+                IconButton(onClick = { SoundEffects.tap(ctx); menu = true }) { Icon(Icons.Default.MoreVert, "More options for ${entry.title}", tint = a.textDim) }
                 DropdownMenu(menu, onDismissRequest = { menu = false }) {
                     DropdownMenuItem(text = { Text("Open") }, leadingIcon = { Icon(Icons.Default.PlayArrow, null) }, onClick = { menu = false; open(false) })
                     DropdownMenuItem(text = { Text("Share") }, leadingIcon = { Icon(Icons.Default.Share, null) }, onClick = { menu = false; open(true) })
-                    DropdownMenuItem(text = { Text("Delete", color = a.danger) }, leadingIcon = { Icon(Icons.Default.Delete, null, tint = a.danger) }, onClick = { menu = false; deleting = true })
+                    DropdownMenuItem(text = { Text("Delete", color = a.danger) }, leadingIcon = { Icon(Icons.Default.Delete, null, tint = a.danger) }, onClick = { SoundEffects.tap(ctx); menu = false; deleting = true })
                 }
             }
         }

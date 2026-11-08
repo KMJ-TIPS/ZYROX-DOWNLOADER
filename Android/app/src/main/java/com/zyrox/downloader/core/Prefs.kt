@@ -1,10 +1,14 @@
 package com.zyrox.downloader.core
 
 import android.content.Context
+import android.content.SharedPreferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import androidx.datastore.preferences.core.emptyPreferences
@@ -30,6 +34,35 @@ object Prefs {
     private val KEY_LAST_CHECK = longPreferencesKey("last_engine_check")
 
     val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
+
+    // Sound reads happen on button presses and notification delivery, so keep these tiny
+    // preferences synchronous; download history and theme stay in their existing DataStore.
+    private const val SOUND_PREFS = "zyrox_sound_preferences"
+    private const val BUTTON_SOUNDS = "button_sounds_enabled"
+    private const val COMPLETION_SOUND = "download_complete_sound_enabled"
+
+    data class SoundSettings(val buttonSounds: Boolean = true, val downloadCompleteSound: Boolean = true)
+
+    private fun sounds(context: Context): SharedPreferences =
+        (context.applicationContext ?: context).getSharedPreferences(SOUND_PREFS, Context.MODE_PRIVATE)
+
+    @JvmStatic fun buttonSoundsEnabled(context: Context): Boolean = sounds(context).getBoolean(BUTTON_SOUNDS, true)
+    @JvmStatic fun completionSoundsEnabled(context: Context): Boolean = sounds(context).getBoolean(COMPLETION_SOUND, true)
+    @JvmStatic fun setButtonSoundsEnabled(context: Context, enabled: Boolean) {
+        sounds(context).edit().putBoolean(BUTTON_SOUNDS, enabled).apply()
+    }
+    @JvmStatic fun setCompletionSoundsEnabled(context: Context, enabled: Boolean) {
+        sounds(context).edit().putBoolean(COMPLETION_SOUND, enabled).apply()
+    }
+
+    fun soundSettingsFlow(context: Context): Flow<SoundSettings> = callbackFlow {
+        val preferences = sounds(context)
+        fun snapshot() = SoundSettings(preferences.getBoolean(BUTTON_SOUNDS, true), preferences.getBoolean(COMPLETION_SOUND, true))
+        val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ -> trySend(snapshot()) }
+        preferences.registerOnSharedPreferenceChangeListener(listener)
+        trySend(snapshot())
+        awaitClose { preferences.unregisterOnSharedPreferenceChangeListener(listener) }
+    }.distinctUntilChanged()
 
     sealed class ThemeMode(val id: String, val label: String) {
         data object System : ThemeMode("system", "System")

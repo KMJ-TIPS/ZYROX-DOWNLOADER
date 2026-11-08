@@ -1,8 +1,13 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="440" viewBox="0 0 1200 440" role="img" aria-label="ZYROX DOWNLOADER. Save the moment.">
-<rect width="1200" height="440" rx="36" fill="#0A1014"/>
-<rect x="86" y="104" width="232" height="232" rx="62" fill="#17382C"/>
-<g transform="translate(86 104) scale(3.625)"><path fill="#B6F5C5" d="M16 17H49V25L29 42H48V50H14V42L35 25H16Z"/><path fill="#F4F4EB" d="M40 17H49V25H32Z"/></g>
-<text x="376" y="212" fill="#F4F4EB" font-family="DejaVu Sans,Arial,sans-serif" font-weight="800" font-size="88" letter-spacing="10">ZYROX</text>
-<text x="382" y="258" fill="#B6F5C5" font-family="DejaVu Sans,Arial,sans-serif" font-size="24" letter-spacing="9">DOWNLOADER</text>
-<text x="382" y="309" fill="#A2AFB2" font-family="DejaVu Sans,Arial,sans-serif" font-size="23">Save the moment.</text>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="440" viewBox="0 0 1200 440" role="img" aria-label="ZYROX DOWNLOADER. Save it. Play it. Keep it.">
+<defs><radialGradient id="halo"><stop stop-color="#153271"/><stop offset="1" stop-color="#080D1B"/></radialGradient></defs>
+<rect width="1200" height="440" rx="36" fill="#080D1B"/><ellipse cx="200" cy="220" rx="330" ry="310" fill="url(#halo)"/>
+<g transform="translate(84 102) scale(3.6875)"><defs><linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3B7BFF"/><stop offset=".58" stop-color="#1748A5"/><stop offset="1" stop-color="#102758"/></linearGradient></defs>
+<rect x="1" y="1" width="62" height="62" rx="18" fill="url(#blue)" stroke="#D9EBFF" stroke-opacity=".25"/>
+<circle cx="32" cy="31" r="24" fill="none" stroke="#B8D7FF" stroke-opacity=".12"/>
+<path d="M28,13Q28,11 30,11H34Q36,11 36,13V29H44Q47,29 45,31L33.5,42.5Q32,44 30.5,42.5L19,31Q17,29 20,29H28Z" fill="#F5F8FF"/>
+<path d="M16,45V48Q16,54 22,54H42Q48,54 48,48V45" fill="none" stroke="#67DFFF" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+<text x="380" y="212" fill="#F5F8FF" font-family="DejaVu Sans,Arial,sans-serif" font-weight="800" font-size="88" letter-spacing="9">ZYROX</text>
+<text x="385" y="260" fill="#92B7FF" font-family="DejaVu Sans,Arial,sans-serif" font-size="24" letter-spacing="8">DOWNLOADER</text>
+<text x="385" y="313" fill="#A4B4D0" font-family="DejaVu Sans,Arial,sans-serif" font-size="23">Save it. Play it. Keep it.</text>
 </svg>

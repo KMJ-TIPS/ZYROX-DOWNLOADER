@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.LocalSaveableStateRegistry
 import androidx.compose.runtime.saveable.SaveableStateRegistry
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.lifecycle.HasDefaultViewModelProviderFactory
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -74,6 +75,9 @@ class ProductionScreenshots {
             setContent {
                 CompositionLocalProvider(
                     LocalViewModelStoreOwner provides owner,
+                    // Preview services use the same fresh-install sound defaults; layoutlib
+                    // does not provide a real SharedPreferences/storage service stack.
+                    LocalInspectionMode provides (tab == Tab.SETTINGS),
                     LocalSaveableStateRegistry provides registry
                 ) {
                     ZyroxTheme(mode) {

@@ -1,13 +1,15 @@
 {
   "kind": "App UI renders, not device captures",
+  "applicationVersion": "1.1.0",
   "renderer": "Paparazzi 2.0.0-alpha02 / Android layoutlib",
   "deviceConfiguration": "Pixel 5, 1080 x 2340, system chrome hidden",
   "productionEntryPoints": [
     "AppRoot",
     "ZyroxSplashView"
   ],
-  "state": "Empty first-use library; no native engine, downloads, account or network initialized",
+  "state": "Empty first-use library; fresh-install sound defaults; no native engine, audio playback, downloads, account or network initialized",
   "settingsApiReason": "Supported Android 10 scoped-storage path; layoutlib has no real StorageManager/package service",
+  "settingsInspectionMode": "Settings uses standard Compose inspection mode for default preference values and unavailable host services; production settings layout is unchanged",
   "images": [
     {
       "file": "home-dark.png",
@@ -19,9 +21,9 @@
       "framesRecorded": 4,
       "selectedFrame": 3,
       "selectedTimeMillis": 1500,
-      "sha256": "4c5dd6d9d9f258508b0ab0630b6ff438f770420c0faa37eb584cbd69bfd88af0",
+      "sha256": "f809eae325a91cba886db61ed4d1bc133b73349b6d958a64fe9744d68324b278",
       "sourceRecording": "com.zyrox.downloader_ProductionScreenshots_homeDark_home-dark.png",
-      "sourceSha256": "5f0c217bfd1f82c964df9cbd974bc21c042bea4afbd59a9656ac32433f1e4523"
+      "sourceSha256": "9ec6068dc8a1996caf7e11469f253a5666f5851651c7598963afa7217c31c803"
     },
     {
       "file": "home-light.png",
@@ -33,9 +35,9 @@
       "framesRecorded": 4,
       "selectedFrame": 3,
       "selectedTimeMillis": 1500,
-      "sha256": "cfe55d11d6ff16ad3558038bd37376a4cfe171890116a725f902265a25503940",
+      "sha256": "e819462c99644c7a962b3322347c9131fff775ac841a991b5352e99d081a4777",
       "sourceRecording": "com.zyrox.downloader_ProductionScreenshots_homeLight_home-light.png",
-      "sourceSha256": "9abefdc9a1d75aacc5042a019fec4ff0464b7c15f4c7b9ebdf4310f5434bbebf"
+      "sourceSha256": "2b3973c1f418f275247080dacc547ca5525aa1823c78adc22e081fa7a1b5c20e"
     },
     {
       "file": "library-dark.png",
@@ -47,9 +49,9 @@
       "framesRecorded": 4,
       "selectedFrame": 3,
       "selectedTimeMillis": 1500,
-      "sha256": "b2f1c7bbcc4dfac6bd28506ac8d69221d2bcf0e8de85c333d61d3c9bf2e891bc",
+      "sha256": "26ec49e6b4a71c8ba7d43595c4931dcd2ab2f1420577105940828786bbf78698",
       "sourceRecording": "com.zyrox.downloader_ProductionScreenshots_libraryDark_downloads-dark.png",
-      "sourceSha256": "72ba232ebf00424597eba0c8ff15485cd726cd00c522a07997b75e2a27ca02d2"
+      "sourceSha256": "186982dce3796509577698158fd511025338980e7182f211689ac355fa966f8b"
     },
     {
       "file": "music-dark.png",
@@ -61,9 +63,9 @@
       "framesRecorded": 4,
       "selectedFrame": 3,
       "selectedTimeMillis": 1500,
-      "sha256": "5e75f8bc3261e34d6d16f43874d20faddd8187385aad6d0e1ce037bc935f76a7",
+      "sha256": "0924dd8ccd49c1d2375906b225e63b42e0446253734595e9b15a2289e97f123c",
       "sourceRecording": "com.zyrox.downloader_ProductionScreenshots_musicDark_music-dark.png",
-      "sourceSha256": "d98b3676ad44719fa0adeb9311bef777433162cabfa75da9d58f037708881cea"
+      "sourceSha256": "8f7588b4775128a2ef028db3eac9fa9c2c6c954ea0d073710dc31d9429f997f9"
     },
     {
       "file": "settings-dark.png",
@@ -75,9 +77,9 @@
       "framesRecorded": 4,
       "selectedFrame": 3,
       "selectedTimeMillis": 1500,
-      "sha256": "fb515bfd4680f073aeee43ac37ca69be95f98a8cebef4fd23d605bf90bd28e6f",
+      "sha256": "b8370018fb1aa49b94904364910e57a2c17b747d56fbe346328319ab813897e9",
       "sourceRecording": "com.zyrox.downloader_ProductionScreenshots_settingsDark_settings-dark.png",
-      "sourceSha256": "2cc977f41a3c00040aaabe1bfdff6c6bbd85c05b95407965b1739634f0e4a39c"
+      "sourceSha256": "a88124df12681a5408fed63b08586587f66053358cf96acbedf39a94ab5467ee"
     },
     {
       "file": "splash.png",
@@ -89,15 +91,18 @@
       "framesRecorded": 4,
       "selectedFrame": 3,
       "selectedTimeMillis": 1500,
-      "sha256": "0888fc7c303938c6bb0e4c561b5cd3b28574cd9bc6749e244970489b02d46ee8",
+      "sha256": "bbddfa768339fa5d0427832851dff859fbeeea8cc98900f985469d82ab40c406",
       "sourceRecording": "com.zyrox.downloader_ProductionScreenshots_splash_splash.png",
-      "sourceSha256": "512b9a2932bb1a20d7dcda554da075d7a150df75362ad7c2e3a85d45995d0f46"
+      "sourceSha256": "9bfef0d43450b0e2f7659d414bb83740b919acabe9e5b86e43fb2c5e0235207f"
     }
   ],
+  "date": "2026-11-08",
+  "timezone": "Asia/Kolkata",
   "verification": {
     "screenshotTests": 6,
     "failures": 0,
     "errors": 0,
-    "visualInspection": "Home dark/light, Library, Music, Settings and splash inspected for correct theme, selected navigation and settled animation content."
+    "visualInspection": "All six actual production UI renders inspected: blue theme, raised curved buttons, new download logo/splash, selected tabs, version1.1.0 and default sound toggles are correct; animations settled.",
+    "audioPlaybackOnDeviceTested": false
   }
 }

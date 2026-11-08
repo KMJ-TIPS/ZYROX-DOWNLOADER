@@ -2,6 +2,8 @@ package com.zyrox.downloader.ui.screens
 
 import android.content.Intent
 import android.net.Uri
+import android.provider.Settings
+import android.widget.Toast
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -10,6 +12,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -24,29 +27,42 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.zyrox.downloader.BuildConfig
+import com.zyrox.downloader.audio.SoundEffects
+import com.zyrox.downloader.service.DownloadService
 import com.zyrox.downloader.core.*
 import com.zyrox.downloader.ui.components.*
 import com.zyrox.downloader.ui.theme.LocalAurora
 import com.zyrox.downloader.util.MediaSaver
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.withContext
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SettingsScreen(themeFlow: kotlinx.coroutines.flow.Flow<Prefs.ThemeMode>, onTheme: (Prefs.ThemeMode) -> Unit) {
     val a = LocalAurora.current
     val context = LocalContext.current
-    val ctx = context.applicationContext
+    val ctx = context.applicationContext ?: context
+    val inspection = LocalInspectionMode.current
+    val soundFlow = remember(ctx, inspection) {
+        if (inspection) flowOf(Prefs.SoundSettings()) else Prefs.soundSettingsFlow(ctx)
+    }
+    val sounds by soundFlow.collectAsState(initial = Prefs.SoundSettings())
+    DisposableEffect(inspection) {
+        onDispose { if (!inspection) SoundEffects.stopPreview() }
+    }
     val theme by themeFlow.collectAsState(initial = Prefs.ThemeMode.System)
     val update by UpdateManager.state.collectAsState()
     var version by remember { mutableStateOf(Engine.BUNDLED_VERSION) }
     var showAbout by remember { mutableStateOf(false) }
-    LaunchedEffect(update) {
-        version = withContext(Dispatchers.IO) { Engine.engineVersion(ctx) } ?: Engine.BUNDLED_VERSION
+    LaunchedEffect(update, inspection) {
+        if (!inspection) version = withContext(Dispatchers.IO) { Engine.engineVersion(ctx) } ?: Engine.BUNDLED_VERSION
     }
     val busy = update is UpdateState.Checking || update is UpdateState.Updating
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
@@ -64,7 +80,7 @@ fun SettingsScreen(themeFlow: kotlinx.coroutines.flow.Flow<Prefs.ThemeMode>, onT
             }
             Surface(shape = RoundedCornerShape(24.dp), color = a.surface, border = BorderStroke(1.dp, a.glassBorder)) {
                 Row(
-                    Modifier.fillMaxWidth().background(a.gradientSoft).clickable { showAbout = true }.padding(20.dp),
+                    Modifier.fillMaxWidth().background(a.gradientSoft).clickable { SoundEffects.tap(ctx); showAbout = true }.padding(20.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     BrandMark(Modifier.size(62.dp))
@@ -89,6 +105,39 @@ fun SettingsScreen(themeFlow: kotlinx.coroutines.flow.Flow<Prefs.ThemeMode>, onT
                         ThemeChoice(mode, theme == mode, Modifier.weight(1f)) { onTheme(mode) }
                     }
                 }
+            }
+            SettingsPanel(VidIcons.MusicNote, "Sounds", "A little feedback. A satisfying finish.") {
+                SoundToggleRow("Button sounds", "A soft tick when you tap controls", sounds.buttonSounds) { enabled ->
+                    Prefs.setButtonSoundsEnabled(ctx, enabled)
+                    if (enabled) SoundEffects.tap(ctx)
+                }
+                HorizontalDivider(Modifier.padding(vertical = 12.dp), color = a.glassBorder)
+                SoundToggleRow("Download complete sound", "A chime after your file is safely saved", sounds.downloadCompleteSound) { enabled ->
+                    SoundEffects.tap(ctx)
+                    Prefs.setCompletionSoundsEnabled(ctx, enabled)
+                    if (!enabled) SoundEffects.stopPreview()
+                }
+                Spacer(Modifier.height(10.dp))
+                FlowRow(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    TextButton(enabled = sounds.downloadCompleteSound, onClick = {
+                        SoundEffects.tap(ctx)
+                        DownloadService.createResultsChannel(ctx)
+                        if (!SoundEffects.previewCompletion(ctx)) Toast.makeText(context,
+                            "Sound is muted. Check volume, Do Not Disturb, and notification settings.", Toast.LENGTH_LONG).show()
+                    }) { Text("Preview sound", style = MaterialTheme.typography.bodySmall) }
+                    TextButton(onClick = {
+                        SoundEffects.tap(ctx)
+                        DownloadService.createResultsChannel(ctx)
+                        runCatching { context.startActivity(Intent(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS)
+                            .putExtra(Settings.EXTRA_APP_PACKAGE, ctx.packageName)
+                            .putExtra(Settings.EXTRA_CHANNEL_ID, SoundEffects.COMPLETED_CHANNEL_ID)
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)) }
+                    }) { Text("Notification settings", style = MaterialTheme.typography.bodySmall) }
+                }
+                Spacer(Modifier.height(6.dp))
+                Text("Silent mode, Do Not Disturb, and your phone's volume always apply. Completion sounds also follow Android notification permissions and channel settings.",
+                    style = MaterialTheme.typography.bodySmall, color = a.textDim)
             }
             SettingsPanel(VidIcons.Update, "Download engine", "The power behind every saved moment") {
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -117,7 +166,7 @@ fun SettingsScreen(themeFlow: kotlinx.coroutines.flow.Flow<Prefs.ThemeMode>, onT
                 Text("Get the latest platform fixes from the official yt-dlp project.", style = MaterialTheme.typography.bodySmall, color = a.textDim)
             }
             SettingsPanel(VidIcons.Download, "Saved on your device", "Your files, ready when you are") {
-                val direct = MediaSaver.hasAllFilesAccess(ctx)
+                val direct = !inspection && MediaSaver.hasAllFilesAccess(ctx)
                 val root = MediaSaver.ROOT_DIR
                 LocationRow(VidIcons.VideoLibrary, "Videos", if (direct) "$root/Video" else "Movies/$root/Video")
                 HorizontalDivider(Modifier.padding(vertical = 14.dp), color = a.glassBorder)
@@ -130,7 +179,7 @@ fun SettingsScreen(themeFlow: kotlinx.coroutines.flow.Flow<Prefs.ThemeMode>, onT
                 Spacer(Modifier.height(12.dp))
                 Text("Platform support can change. Private, protected, or login-only posts may be unavailable. Save content you own or have permission to download.", style = MaterialTheme.typography.bodySmall, color = a.textDim)
             }
-            TextButton(onClick = { showAbout = true }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
+            TextButton(onClick = { SoundEffects.tap(ctx); showAbout = true }, modifier = Modifier.align(Alignment.CenterHorizontally)) {
                 Text("About ZYROX & project credits", style = MaterialTheme.typography.labelLarge)
             }
             Text("SAVE THE MOMENT.", style = MaterialTheme.typography.labelSmall, letterSpacing = 2.sp, color = a.textFaint, modifier = Modifier.align(Alignment.CenterHorizontally))
@@ -149,9 +198,10 @@ fun SettingsScreen(themeFlow: kotlinx.coroutines.flow.Flow<Prefs.ThemeMode>, onT
                     Text("Based on the VidGrab project by Saurabh-gzp. Original project credit and third-party notices are included with the source.", style = MaterialTheme.typography.bodySmall)
                 }
             },
-            confirmButton = { TextButton(onClick = { showAbout = false }) { Text("Done") } },
+            confirmButton = { TextButton(onClick = { SoundEffects.tap(ctx); showAbout = false }) { Text("Done") } },
             dismissButton = {
                 TextButton(onClick = {
+                    SoundEffects.tap(ctx)
                     runCatching { context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/Saurabh-gzp/VidGrab"))) }
                 }) { Text("Original project") }
             }
@@ -162,20 +212,21 @@ fun SettingsScreen(themeFlow: kotlinx.coroutines.flow.Flow<Prefs.ThemeMode>, onT
 @Composable
 private fun ThemeChoice(mode: Prefs.ThemeMode, selected: Boolean, modifier: Modifier, onClick: () -> Unit) {
     val a = LocalAurora.current
+    val context = LocalContext.current
     val shape = RoundedCornerShape(17.dp)
     val border by animateColorAsState(if (selected) a.primary else a.glassBorder, label = "appearance border")
     val background by animateColorAsState(if (selected) a.primary.copy(alpha = .08f) else a.surface, label = "appearance background")
     val dark = mode == Prefs.ThemeMode.Dark
-    val previewBg = if (dark) Color(0xFF0A1014) else Color(0xFFF2F6F0)
+    val previewBg = if (dark) Color(0xFF080D1B) else Color(0xFFF2F6FF)
     Column(modifier.clip(shape).background(background).border(if (selected) 1.5.dp else 1.dp, border, shape)
-        .selectable(selected, role = Role.RadioButton, onClick = onClick).padding(11.dp)) {
+        .selectable(selected, role = Role.RadioButton, onClick = { if (!selected) { SoundEffects.tap(context); onClick() } }).padding(11.dp)) {
         Box(Modifier.fillMaxWidth().height(55.dp).clip(RoundedCornerShape(9.dp))
-            .background(if (mode == Prefs.ThemeMode.System) Brush.horizontalGradient(listOf(Color(0xFFF2F6F0), Color(0xFF0A1014)))
+            .background(if (mode == Prefs.ThemeMode.System) Brush.horizontalGradient(listOf(Color(0xFFF2F6FF), Color(0xFF080D1B)))
             else Brush.linearGradient(listOf(previewBg, previewBg)))) {
             Column(Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                Box(Modifier.width(20.dp).height(5.dp).clip(CircleShape).background(if (dark) Color(0xFFB6F5C5) else Color(0xFF176548)))
-                Box(Modifier.fillMaxWidth(.8f).height(4.dp).clip(CircleShape).background(if (dark) Color(0xFF43595F) else Color(0xFFBBCDC2)))
-                Box(Modifier.fillMaxWidth(.6f).height(4.dp).clip(CircleShape).background(if (dark) Color(0xFF43595F) else Color(0xFFBBCDC2)))
+                Box(Modifier.width(20.dp).height(5.dp).clip(CircleShape).background(if (dark) Color(0xFF92B7FF) else Color(0xFF245AD4)))
+                Box(Modifier.fillMaxWidth(.8f).height(4.dp).clip(CircleShape).background(if (dark) Color(0xFF405478) else Color(0xFFBDCAE8)))
+                Box(Modifier.fillMaxWidth(.6f).height(4.dp).clip(CircleShape).background(if (dark) Color(0xFF405478) else Color(0xFFBDCAE8)))
             }
         }
         Spacer(Modifier.height(10.dp))
@@ -205,6 +256,21 @@ private fun SettingsPanel(icon: ImageVector, title: String, subtitle: String, co
             Spacer(Modifier.height(18.dp))
             content()
         }
+    }
+}
+
+@Composable
+private fun SoundToggleRow(title: String, subtitle: String, checked: Boolean, onChecked: (Boolean) -> Unit) {
+    val a = LocalAurora.current
+    Row(Modifier.fillMaxWidth().heightIn(min = 58.dp)
+        .toggleable(value = checked, role = Role.Switch, onValueChange = onChecked),
+        verticalAlignment = Alignment.CenterVertically) {
+        Column(Modifier.weight(1f).padding(end = 12.dp)) {
+            Text(title, style = MaterialTheme.typography.labelLarge)
+            Spacer(Modifier.height(3.dp))
+            Text(subtitle, style = MaterialTheme.typography.bodySmall, color = a.textDim)
+        }
+        Switch(checked = checked, onCheckedChange = null)
     }
 }
 

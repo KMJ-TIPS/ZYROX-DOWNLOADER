@@ -16,6 +16,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.platform.LocalContext
+import com.zyrox.downloader.audio.SoundEffects
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
@@ -25,15 +30,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.zyrox.downloader.ui.theme.LocalAurora
 
-/** Runs only while a control is pressed; rendering is idle after the spring settles. */
+/** A finite spring press; Compose honours the system animator duration scale. */
 fun Modifier.pressScale(interaction: MutableInteractionSource): Modifier = composed {
     val pressed by interaction.collectIsPressedAsState()
     val scale by animateFloatAsState(
-        targetValue = if (pressed) 0.965f else 1f,
+        targetValue = if (pressed) 0.978f else 1f,
         animationSpec = spring(dampingRatio = Spring.DampingRatioNoBouncy, stiffness = Spring.StiffnessMedium),
         label = "press"
     )
-    graphicsLayer { scaleX = scale; scaleY = scale }
+    graphicsLayer { scaleX = scale; scaleY = scale; translationY = (1f - scale) / .022f * 2.dp.toPx() }
 }
 
 /** Compatibility name. A quiet, static accent avoids redrawing idle screens. */
@@ -45,7 +50,7 @@ fun animatedAuroraBrush(): Brush {
 
 fun Modifier.glassCard(highlight: Boolean = false): Modifier = composed {
     val colors = LocalAurora.current
-    val shape = RoundedCornerShape(24.dp)
+    val shape = RoundedCornerShape(28.dp)
     clip(shape).background(colors.surface)
         .border(1.dp, if (highlight) colors.violet.copy(alpha = 0.45f) else colors.glassBorder, shape)
 }
@@ -93,20 +98,47 @@ fun GradientButton(
     onClick: () -> Unit
 ) {
     val colors = LocalAurora.current
+    val context = LocalContext.current
     val interaction = remember { MutableInteractionSource() }
-    val shape = RoundedCornerShape(16.dp)
-    val brush = if (enabled && !loading) Brush.linearGradient(listOf(colors.primary, colors.cyan))
+    val pressed by interaction.collectIsPressedAsState()
+    val travel by animateFloatAsState(
+        if (pressed && enabled && !loading) 1f else 0f,
+        spring(dampingRatio = Spring.DampingRatioNoBouncy, stiffness = Spring.StiffnessMedium),
+        label = "curved button depth"
+    )
+    val shape = RoundedCornerShape(25.dp)
+    val active = enabled && !loading
+    val brush = if (active) Brush.linearGradient(listOf(colors.primary, colors.cyan))
         else Brush.linearGradient(listOf(colors.surfaceHigh, colors.surfaceHigh))
-    Row(modifier.fillMaxWidth().heightIn(min = 56.dp).pressScale(interaction)
-        .clip(shape).background(brush)
-        .border(1.dp, Color.White.copy(alpha = if (enabled) .14f else .04f), shape)
-        .clickable(enabled = enabled && !loading, interactionSource = interaction, indication = ripple(), role = androidx.compose.ui.semantics.Role.Button, onClick = onClick)
-        .padding(horizontal = 18.dp, vertical = 15.dp),
-        horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
-        val foreground = if (enabled && !loading) MaterialTheme.colorScheme.onPrimary else colors.textDim
-        if (loading) { CircularProgressIndicator(Modifier.size(18.dp), color = foreground, strokeWidth = 2.dp); Spacer(Modifier.width(10.dp)) }
-        else if (icon != null) { Icon(icon, null, Modifier.size(20.dp), tint = foreground); Spacer(Modifier.width(9.dp)) }
-        Text(text, style = MaterialTheme.typography.labelLarge, color = foreground, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+    val ledge = if (active) if (colors.isDark) Color(0xFF365EAA) else Color(0xFF143E9B) else colors.glassBorder
+    Box(modifier.fillMaxWidth().padding(bottom = 6.dp)) {
+        Box(Modifier.matchParentSize().offset(y = 6.dp).clip(shape).background(ledge))
+        Row(Modifier.fillMaxWidth().heightIn(min = 58.dp)
+            .graphicsLayer { translationY = travel * 5.dp.toPx(); scaleX = 1f - travel * .012f }
+            .shadow(if (active) (12f - travel * 9f).dp else 0.dp, shape, clip = false,
+                ambientColor = colors.primary.copy(alpha = .18f), spotColor = Color.Black.copy(alpha = .28f))
+            .clip(shape).background(brush)
+            .drawWithContent {
+                drawContent()
+                if (active) drawLine(Color.White.copy(alpha = .52f), Offset(24.dp.toPx(), 1.5.dp.toPx()),
+                    Offset(size.width - 24.dp.toPx(), 1.5.dp.toPx()), strokeWidth = 1.dp.toPx())
+            }
+            .border(1.dp, Color.White.copy(alpha = if (active) .3f else .04f), shape)
+            .clickable(enabled = active, interactionSource = interaction, indication = ripple(),
+                role = androidx.compose.ui.semantics.Role.Button, onClick = { SoundEffects.tap(context); onClick() })
+            .padding(horizontal = 20.dp, vertical = 16.dp),
+            horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically) {
+            val foreground = if (active) MaterialTheme.colorScheme.onPrimary else colors.textDim
+            if (loading) {
+                CircularProgressIndicator(Modifier.size(18.dp), color = foreground, strokeWidth = 2.dp)
+                Spacer(Modifier.width(10.dp))
+            } else if (icon != null) {
+                Icon(icon, null, Modifier.size(20.dp), tint = foreground)
+                Spacer(Modifier.width(9.dp))
+            }
+            Text(text, style = MaterialTheme.typography.labelLarge, color = foreground,
+                fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+        }
     }
 }
 

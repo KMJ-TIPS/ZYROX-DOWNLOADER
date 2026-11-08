@@ -18,3 +18,6 @@
 *.iml
 .DS_Store
 # Generated screenshots are intentionally tracked under docs/assets/screenshots.
+
+# Generated multi-frame render recordings; published PNGs live in docs/assets/screenshots.
+**/src/test/snapshots/videos/

@@ -1,4 +1,6 @@
-# ZYROX validation
+# ZYROX 1.0 validation (historical)
+
+For the current 1.1 release, see [VALIDATION-1.1.md](VALIDATION-1.1.md).
 
 Fork base: Saurabh-gzp/VidGrab commit `ffbb72a7044b37a3008bf61de8261411cacee951` (3.1.0).
 

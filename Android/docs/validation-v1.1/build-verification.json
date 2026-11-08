@@ -1,0 +1,106 @@
+{
+  "date": "2026-11-08",
+  "timezone": "Asia/Kolkata",
+  "application": {
+    "id": "com.zyrox.downloader",
+    "label": "ZYROX DOWNLOADER",
+    "versionCode": 2,
+    "versionName": "1.1.0",
+    "minSdk": 29,
+    "targetSdk": 36,
+    "abis": [
+      "arm64-v8a"
+    ]
+  },
+  "apk": {
+    "file": "ZYROX-DOWNLOADER-v1.1.0-arm64.apk",
+    "buildType": "release",
+    "minified": true,
+    "sizeBytes": 62295679,
+    "sha256": "6c3e197bfaae167b1ade97fd9ed6646a41a67fbee636072d295960f9a090dbee",
+    "zipalign4ByteVerified": true,
+    "extractNativeLibs": true
+  },
+  "signing": {
+    "kind": "original ZYROX development certificate retained for in-place update",
+    "verified": true,
+    "v2": true,
+    "certificateSubject": "CN=ZYROX Downloader Development, O=ZYROX, C=IN",
+    "certificateSha256": "7baeb597707bf0dacd7f9671718e87933047fd871a2ea31eb7a2501511455e13",
+    "certificateSha1": "da4195c9bb9d9c9ff0670ba505882d4e55a93c9d"
+  },
+  "updateCompatibility": {
+    "previousVersion": "1.0.0",
+    "samePackage": true,
+    "sameCertificate": true,
+    "higherVersionCode": true,
+    "installationOnDeviceTested": false
+  },
+  "checks": {
+    "commands": [
+      "./gradlew :app:testDebugUnitTest :app:assembleRelease",
+      "./gradlew :app:lintDebug",
+      "apksigner verify --verbose --print-certs app-release.apk",
+      "zipalign -c -v 4 app-release.apk",
+      "aapt dump badging app-release.apk"
+    ],
+    "unitTests": {
+      "tests": 73,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "lint": {
+      "errors": 0,
+      "fatal": 0,
+      "warnings": 10
+    }
+  },
+  "runtime": {
+    "ytDlpBundledVersion": "2026.10.26",
+    "nativeLibraries": [
+      "lib/arm64-v8a/libandroidx.graphics.path.so",
+      "lib/arm64-v8a/libdatastore_shared_counter.so",
+      "lib/arm64-v8a/libffmpeg.so",
+      "lib/arm64-v8a/libffmpeg.zip.so",
+      "lib/arm64-v8a/libffprobe.so",
+      "lib/arm64-v8a/libpython.so",
+      "lib/arm64-v8a/libpython.zip.so",
+      "lib/arm64-v8a/libqjs.so"
+    ],
+    "licenseAssets": [
+      "assets/licenses/THIRD_PARTY_NOTICES.md",
+      "assets/licenses/youtubedl-android-GPL-3.0.txt",
+      "assets/licenses/yt-dlp-UNLICENSE.txt"
+    ],
+    "bundledSounds": [
+      {
+        "sourceFile": "zyrox_tap.wav",
+        "sha256": "369fc51a7584b2be5ffe3207e39f6ca9dd34d702520c2271c681fe43fc99433d",
+        "apkEntry": "res/e2.wav",
+        "bytes": 5776,
+        "resourceNameRetained": true
+      },
+      {
+        "sourceFile": "zyrox_complete.wav",
+        "sha256": "5d46e2e541b9e74e3fcf36d7342064f0b0a63e497765535f5ea63c7cd52a8267",
+        "apkEntry": "res/JX.wav",
+        "bytes": 55610,
+        "resourceNameRetained": true
+      }
+    ]
+  },
+  "tools": {
+    "jdk": "Eclipse Temurin 17.0.21",
+    "gradle": "8.14.3",
+    "androidGradlePlugin": "8.11.1",
+    "kotlin": "2.2.0",
+    "sdkPlatform": 36,
+    "buildTools": "36.0.0"
+  },
+  "limits": [
+    "No Android device or emulator was available; installation, audible tap/completion sounds, playback and live platform downloads were not exercised on a phone.",
+    "Platform availability and authentication requirements are controlled by yt-dlp and the source sites.",
+    "The APK retains the ZYROX development signing key; production distribution should use a maintained private release key."
+  ]
+}

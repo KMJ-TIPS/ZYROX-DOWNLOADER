@@ -18,6 +18,8 @@ import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import com.zyrox.downloader.audio.SoundEffects
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
@@ -63,17 +65,19 @@ fun AppRoot(themeFlow: kotlinx.coroutines.flow.Flow<Prefs.ThemeMode>, incomingUr
             Column(Modifier.fillMaxWidth().background(a.bg).navigationBarsPadding(), horizontalAlignment = Alignment.CenterHorizontally) {
                 if (updating is UpdateState.Updating || updating is UpdateState.Done || updating is UpdateState.Failed) UpdateOverlay(updating)
                 Row(Modifier.widthIn(max = 600.dp).fillMaxWidth().padding(horizontal = 18.dp, vertical = 10.dp)
-                    .clip(RoundedCornerShape(24.dp)).background(a.surface)
-                    .border(1.dp, a.glassBorder, RoundedCornerShape(24.dp)).padding(6.dp),
+                    .shadow(20.dp, RoundedCornerShape(30.dp), ambientColor = Color.Black.copy(alpha = .24f), spotColor = Color.Black.copy(alpha = .32f))
+                    .clip(RoundedCornerShape(30.dp)).background(a.surface)
+                    .border(1.dp, a.glassBorder, RoundedCornerShape(30.dp)).padding(7.dp),
                     horizontalArrangement = Arrangement.spacedBy(3.dp)) {
                     Tab.entries.forEach { item ->
                         val selected = item == tab
-                        val background by animateColorAsState(if (selected) a.primary.copy(alpha = if (a.isDark) .13f else .1f) else Color.Transparent, label = "navigation colour")
-                        val foreground by animateColorAsState(if (selected) a.primary else a.textDim, label = "navigation icon")
+                        val background by animateColorAsState(if (selected) a.primary else Color.Transparent, label = "navigation colour")
+                        val foreground by animateColorAsState(if (selected) MaterialTheme.colorScheme.onPrimary else a.textDim, label = "navigation icon")
                         val interaction = remember { MutableInteractionSource() }
                         Column(Modifier.weight(1f).heightIn(min = 58.dp).pressScale(interaction)
-                            .clip(RoundedCornerShape(18.dp)).background(background)
-                            .selectable(selected, role = Role.Tab, interactionSource = interaction, indication = ripple(), onClick = { tab = item }),
+                            .clip(RoundedCornerShape(23.dp)).background(background)
+                            .border(1.dp, if (selected) Color.White.copy(alpha = .24f) else Color.Transparent, RoundedCornerShape(23.dp))
+                            .selectable(selected, role = Role.Tab, interactionSource = interaction, indication = ripple(), onClick = { if (tab != item) { SoundEffects.tap(ctx); tab = item } }),
                             horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                             Box {
                                 Icon(item.icon, null, Modifier.size(21.dp), tint = foreground)

@@ -1,4 +1,7 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="ZYROX DOWNLOADER logo">
-<rect width="256" height="256" rx="68" fill="#17382C"/>
-<g transform="scale(4)"><path fill="#B6F5C5" d="M16 17H49V25L29 42H48V50H14V42L35 25H16Z"/><path fill="#F4F4EB" d="M40 17H49V25H32Z"/></g>
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 64 64" role="img" aria-label="ZYROX DOWNLOADER logo">
+<defs><linearGradient id="blue" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#3B7BFF"/><stop offset=".58" stop-color="#1748A5"/><stop offset="1" stop-color="#102758"/></linearGradient></defs>
+<rect x="1" y="1" width="62" height="62" rx="18" fill="url(#blue)" stroke="#D9EBFF" stroke-opacity=".25"/>
+<circle cx="32" cy="31" r="24" fill="none" stroke="#B8D7FF" stroke-opacity=".12"/>
+<path d="M28,13Q28,11 30,11H34Q36,11 36,13V29H44Q47,29 45,31L33.5,42.5Q32,44 30.5,42.5L19,31Q17,29 20,29H28Z" fill="#F5F8FF"/>
+<path d="M16,45V48Q16,54 22,54H42Q48,54 48,48V45" fill="none" stroke="#67DFFF" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>

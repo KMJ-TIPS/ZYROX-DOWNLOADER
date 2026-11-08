@@ -3,6 +3,7 @@
 import argparse
 import hashlib
 import json
+import re
 from pathlib import Path
 try:
     from PIL import Image
@@ -46,11 +47,13 @@ for method, (name, api) in methods.items():
     })
 metadata = {
     'kind': 'App UI renders, not device captures',
+    'applicationVersion': re.search(r'versionName\s*=\s*"([^"]+)"', (project/'app/build.gradle.kts').read_text()).group(1),
     'renderer': 'Paparazzi 2.0.0-alpha02 / Android layoutlib',
     'deviceConfiguration': 'Pixel 5, 1080 x 2340, system chrome hidden',
     'productionEntryPoints': ['AppRoot', 'ZyroxSplashView'],
-    'state': 'Empty first-use library; no native engine, downloads, account or network initialized',
+    'state': 'Empty first-use library; fresh-install sound defaults; no native engine, audio playback, downloads, account or network initialized',
     'settingsApiReason': 'Supported Android 10 scoped-storage path; layoutlib has no real StorageManager/package service',
+    'settingsInspectionMode': 'Settings uses standard Compose inspection mode for default preference values and unavailable host services; production settings layout is unchanged',
     'images': images,
 }
 (args.output/'provenance.json').write_text(json.dumps(metadata, indent=2)+'\n')

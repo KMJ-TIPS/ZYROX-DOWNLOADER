@@ -11,11 +11,14 @@ import android.content.pm.ServiceInfo
 import android.os.Build
 import android.os.IBinder
 import android.os.PowerManager
+import android.provider.Settings
 import androidx.core.app.NotificationCompat
 import com.zyrox.downloader.MainActivity
 import com.zyrox.downloader.R
 import com.zyrox.downloader.core.DlStatus
 import com.zyrox.downloader.core.DownloadRepository
+import com.zyrox.downloader.core.Prefs
+import com.zyrox.downloader.audio.SoundEffects
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -220,7 +223,8 @@ class DownloadService : Service() {
 
     companion object {
         const val CHANNEL_ID = "zyrox_downloads"
-        const val RESULTS_CHANNEL_ID = "zyrox_results"
+        const val RESULTS_CHANNEL_ID = SoundEffects.SILENT_RESULTS_CHANNEL_ID
+        private const val LEGACY_RESULTS_CHANNEL_ID = "zyrox_results"
         const val NOTIF_ID = 101
         const val ACTION_CANCEL = "com.zyrox.downloader.action.CANCEL_DOWNLOAD"
         const val EXTRA_ID = "download_id"
@@ -239,13 +243,34 @@ class DownloadService : Service() {
 
         fun createResultsChannel(ctx: Context) {
             val nm = ctx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            val ch = NotificationChannel(
-                RESULTS_CHANNEL_ID, ctx.getString(R.string.notif_channel_results),
-                NotificationManager.IMPORTANCE_DEFAULT
+            val legacy = nm.getNotificationChannel(LEGACY_RESULTS_CHANNEL_ID)
+            // Channel sounds are immutable after creation. Separate IDs make the in-app
+            // toggle effective immediately, while Android retains user overrides per channel.
+            val silent = NotificationChannel(
+                RESULTS_CHANNEL_ID, "Quiet download results", NotificationManager.IMPORTANCE_DEFAULT
             ).apply {
-                description = ctx.getString(R.string.notif_channel_results_desc)
+                description = "Failed downloads and results with completion sound switched off"
+                setSound(null, null)
+                enableVibration(false)
+                setShowBadge(true)
             }
-            nm.createNotificationChannel(ch)
+            val audible = NotificationChannel(
+                SoundEffects.COMPLETED_CHANNEL_ID, "Download complete sound",
+                legacy?.importance ?: NotificationManager.IMPORTANCE_DEFAULT
+            ).apply {
+                description = "An original ZYROX chime after a file is successfully saved"
+                // An existing Android mute/custom-sound choice must survive the v1.0 upgrade.
+                val keepLegacySound = legacy != null && (legacy.sound == null ||
+                    (Build.VERSION.SDK_INT >= 30 && legacy.hasUserSetSound()) ||
+                    legacy.sound != Settings.System.DEFAULT_NOTIFICATION_URI)
+                setSound(if (keepLegacySound) legacy?.sound else SoundEffects.completionSoundUri(ctx),
+                    SoundEffects.completionAudioAttributes())
+                enableVibration(false)
+                setShowBadge(true)
+            }
+            nm.createNotificationChannels(listOf(silent, audible))
+            // Old result notifications are replaced by the new result channels; never alert twice.
+            if (legacy != null) nm.deleteNotificationChannel(LEGACY_RESULTS_CHANNEL_ID)
         }
 
         /**
@@ -253,7 +278,7 @@ class DownloadService : Service() {
          * Progress wali notif service ke finishUp() se remove ho jati hai —
          * result notif par tap → app khulta hai, swipe → gayab.
          */
-        fun notifyResult(ctx: Context, success: Boolean, title: String, detail: String) {
+        fun notifyResult(ctx: Context, success: Boolean, title: String, detail: String, resultId: String? = null) {
             try {
                 createChannel(ctx)
                 createResultsChannel(ctx)
@@ -261,17 +286,27 @@ class DownloadService : Service() {
                     ctx, 0, Intent(ctx, MainActivity::class.java),
                     PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
                 )
-                val n = NotificationCompat.Builder(ctx, RESULTS_CHANNEL_ID)
+                val audible = success && Prefs.completionSoundsEnabled(ctx)
+                val resultChannel = if (audible) SoundEffects.COMPLETED_CHANNEL_ID else RESULTS_CHANNEL_ID
+                val n = NotificationCompat.Builder(ctx, resultChannel)
                     .setSmallIcon(R.drawable.ic_stat_download)
                     .setContentTitle(ctx.getString(if (success) R.string.notif_download_done else R.string.notif_download_failed))
                     .setContentText("$title • $detail".take(120))
                     .setStyle(NotificationCompat.BigTextStyle().bigText("$title\n$detail"))
                     .setAutoCancel(true)
                     .setOngoing(false)
+                    .setOnlyAlertOnce(true)
+                    .setSilent(!audible)
                     .setContentIntent(contentIntent)
                     .build()
                 val nm = ctx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                nm.notify((title.hashCode() and 0x7FFFFFFF) % 100000 + 1000, n)
+                if (nm.areNotificationsEnabled()) {
+                    // A stable task ID prevents duplicate result updates from replaying a chime.
+                    // Different downloads of the same title still receive their own alert.
+                    val taskKey = resultId ?: title
+                    if (success) nm.cancel("zyrox.failed.$taskKey", 103)
+                    nm.notify(if (success) "zyrox.completed.$taskKey" else "zyrox.failed.$taskKey", 103, n)
+                }
             } catch (_: Exception) { }
         }
 

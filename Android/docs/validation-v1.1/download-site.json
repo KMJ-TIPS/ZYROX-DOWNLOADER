@@ -1,0 +1,116 @@
+{
+  "viewports": [
+    {
+      "width": 320,
+      "viewport": 320,
+      "pageWidth": 320,
+      "brokenImages": [],
+      "screenshotCount": 6,
+      "screenImageCount": 9,
+      "downloadHrefs": [
+        "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.1.0-arm64.apk",
+        "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.1.0-arm64.apk",
+        "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.1.0-arm64.apk",
+        "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.1.0-arm64.apk"
+      ],
+      "soundDefault": "false",
+      "automaticAudioRequests": 0,
+      "mobileBarVisible": true,
+      "menu": {
+        "open": "true",
+        "firstLinkFocused": true,
+        "closed": true,
+        "focusReturned": true
+      },
+      "galleryKeyboard": true,
+      "faqOpens": true,
+      "scriptErrors": [],
+      "failedRequests": [],
+      "correctDownloadLinks": true
+    },
+    {
+      "width": 360,
+      "viewport": 360,
+      "pageWidth": 360,
+      "brokenImages": [],
+      "screenshotCount": 6,
+      "screenImageCount": 9,
+      "downloadHrefs": [
+        "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.1.0-arm64.apk",
+        "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.1.0-arm64.apk",
+        "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.1.0-arm64.apk",
+        "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.1.0-arm64.apk"
+      ],
+      "soundDefault": "false",
+      "automaticAudioRequests": 0,
+      "mobileBarVisible": true,
+      "menu": {
+        "open": "true",
+        "firstLinkFocused": true,
+        "closed": true,
+        "focusReturned": true
+      },
+      "galleryKeyboard": true,
+      "faqOpens": true,
+      "scriptErrors": [],
+      "failedRequests": [],
+      "correctDownloadLinks": true
+    },
+    {
+      "width": 768,
+      "viewport": 768,
+      "pageWidth": 768,
+      "brokenImages": [],
+      "screenshotCount": 6,
+      "screenImageCount": 9,
+      "downloadHrefs": [
+        "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.1.0-arm64.apk",
+        "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.1.0-arm64.apk",
+        "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.1.0-arm64.apk",
+        "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.1.0-arm64.apk"
+      ],
+      "soundDefault": "false",
+      "automaticAudioRequests": 0,
+      "mobileBarVisible": false,
+      "menu": null,
+      "galleryKeyboard": true,
+      "faqOpens": true,
+      "scriptErrors": [],
+      "failedRequests": [],
+      "correctDownloadLinks": true
+    },
+    {
+      "width": 1440,
+      "viewport": 1440,
+      "pageWidth": 1440,
+      "brokenImages": [],
+      "screenshotCount": 6,
+      "screenImageCount": 9,
+      "downloadHrefs": [
+        "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.1.0-arm64.apk",
+        "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.1.0-arm64.apk",
+        "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.1.0-arm64.apk",
+        "https://github.com/KMJ-TIPS/ZYROX-DOWNLOADER/releases/latest/download/ZYROX-DOWNLOADER-v1.1.0-arm64.apk"
+      ],
+      "soundDefault": "false",
+      "automaticAudioRequests": 0,
+      "mobileBarVisible": false,
+      "menu": null,
+      "galleryKeyboard": true,
+      "faqOpens": true,
+      "scriptErrors": [],
+      "failedRequests": [],
+      "correctDownloadLinks": true
+    }
+  ],
+  "reducedMotion": {
+    "reducedMotion": true,
+    "scrollBehavior": "auto",
+    "buttonTransition": "0s"
+  },
+  "soundToggle": {
+    "enabled": "true",
+    "disabled": "false"
+  },
+  "manualAudioPreview": "Preview finished. App sounds are controlled in Settings."
+}
